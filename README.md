@@ -1,1 +1,420 @@
-# GitHubTutorial
+# GitHub Essentials for Engineers
+
+Welcome! This repository is a hands-on guide to learning Git + GitHub the way engineering teams actually use it: branches, pull requests, code review, issues, and automation.
+
+## Learning goals
+By the end of this repo you should be able to:
+- Clone a repo, create branches, commit changes, push to GitHub.
+- Open a **Pull Request (PR)**, request review, respond to feedback, and merge safely.
+- Use **Issues** for planning and bug reports (with labels and templates).
+- Resolve **merge conflicts** confidently.
+- Understand the basics of **CI** and why checks matter.
+- Work in a team using a simple workflow.
+
+---
+
+# Table of contents
+1. [Setup](#setup)
+2. [How this course works](#how-this-course-works)
+3. [Git fundamentals](#git-fundamentals)
+4. [Branching & workflow](#branching--workflow)
+5. [Pull requests & code review](#pull-requests--code-review)
+6. [Issues & project planning](#issues--project-planning)
+7. [Conflicts & recovery](#conflicts--recovery)
+8. [Automation & CI (GitHub Actions)](#automation--ci-github-actions)
+9. [Repo quality standards](#repo-quality-standards)
+10. [Exercises](#exercises)
+11. [Glossary](#glossary)
+12. [FAQ / Troubleshooting](#faq--troubleshooting)
+
+---
+
+## Setup
+
+### Tools you need
+- Git installed (`git --version`)
+- A GitHub account
+- A code editor - VS Code, IntelliJ etc.
+
+### First Time Git configuration
+```bash
+git config --global user.name "Your Name"
+git config --global user.email "you@example.com"
+git config --global init.defaultBranch main
+```
+
+---
+
+## How this Course Works
+
+---
+
+## Git Fundamentals
+
+Git is a **version control system**. It tracks changes to files over time so you can:
+- see what changed and why,
+- collaborate without overwriting each other,
+- undo mistakes safely,
+- understand how a project evolved.
+
+GitHub is **not** Git — GitHub hosts Git repositories and adds collaboration features like pull requests, issues, and automation.
+
+---
+
+## The Git Model
+
+Think of Git as having four main parts:
+
+- **Working directory**  
+  The files on your computer right now.
+
+- **Staging area (index)**  
+  The list of changes you *intend* to include in your next commit.
+
+- **Commit**  
+  A snapshot of the staged changes, with a message explaining *why*.
+
+- **Remote repository**  
+  A copy of the project stored on GitHub.
+
+---
+
+## Branching & Workflow
+
+Branches allow you to work on changes **without breaking the main codebase**. Every feature, fix, or experiment should happen on its own branch.
+There are many different Git branching methodologies, however I'd personally recommend keeping it as simple as possible.
+In this course, the `main` branch represents **stable, working code**.
+
+---
+
+### A Simple Workflow
+
+The workflow used in this repository mirrors how an example engineering team works:
+
+1. **Create an Issue**  
+   Describe the work you want to do. GitHub offers issues, but other common ticketing software includes JIRA and Trello.
+
+2. **Create a Branch from `main`**  
+   All work happens on branches — never directly on `main`.
+
+3. **Make Commits**  
+   Commit small, logical changes with clear messages.
+
+4. **Open a Pull Request (PR)**  
+   Propose your changes for review.
+
+5. **Review & Improve**  
+   Respond to feedback and update your branch.
+
+6. **Merge to `main`**  
+   Only after approval and passing checks.
+
+> **Important:** Direct commits to `main` aren't blocked by default, but it is *never* good practice to push directly to `main`. Direct commits to `main` can be blocked in Git settings.
+> If it didn’t go through a Pull Request, it didn’t happen.
+
+---
+
+### Creating a branch
+
+Before creating a branch, make sure `main` is up to date:
+
+```bash
+git checkout main
+git pull
+```
+
+You can now a new branch based on the current branch.
+Make sure to use clear and descriptive branch naming, commonly including a ticket number.
+
+```bash
+git checkout -b feat/short-description
+```
+
+Common types
+•	feat/ – new features
+•	fix/ – bug fixes
+•	docs/ – documentation changes
+•	task/ – maintenance or cleanup
+
+---
+
+### Working on a Branch
+
+Standard flow, commit early and often - keep each commit focussed on an idea or deliverable:
+```bash
+git status                       # Check current state
+git add .                        # Stage all changes
+git add /src/<file_name>         # Stage specificchanges
+git commit -m "Add validation for input data"
+```
+
+---
+
+### Pushing a Branch to GitHub
+
+The first time you push a new branch:
+
+```bash
+git push -u origin feat/short-description
+```
+
+After that, you can just use:
+```bash
+git push
+```
+
+---
+
+### Keeping your Branch Updated
+
+If your `main` branch is changing frequently, make sure to keep your local branch updated.
+If your branch contains changes to files that have also changed in `main`, you will have a Git conflict. These are explained in a later section.
+
+```bash
+git checkout main
+git pull
+git checkout feat/short-description
+git merge main
+```
+
+---
+
+## Pull requests & code review
+
+A **Pull Request (PR)** is how changes move from a branch into `main`.  
+It’s also where discussion, feedback, and learning happen.
+
+Think of a PR as:
+- a proposal,
+- a conversation.
+- a quality check.
+
+For those who haven't seen a PR before - here is an exmaple ->
+The PR will show a summary, and the changes that have been made in the branch that are being proposed for merge.
+
+---
+
+### When to open a Pull Request
+
+You can open a PR as soon as a branch has been pushed to GitHub, even as a draft if the change is not yet ready for review.
+Many teams will trigger automation following the creation of a PR, so in many cases it's required in order to kick off automated test runs, quality checks etc.
+Once you are happy with your PR, you can mark it as `Ready for Review`, and pass the link to a team member or Slack channel for feedback.
+
+You **do not** need the work to be perfect — PRs exist to improve it.
+
+---
+
+### Writing a good Pull Request
+
+A good PR makes life easier for reviewers. When working in a large team of engineers on a long-lived application, the quality of PRs has immense importance.
+Engineers who work on your application (potentially years after your change was made) will be grateful to you for the quality of your PRs.
+
+Include:
+- **What changed** (summary)
+- **Why it changed** (context or problem)
+- **How it was tested**
+- A link to the related issue (e.g. `Closes #12`)
+
+From past experience, there will almost definitely be be a time in your engineering life when you're looking at a code change with absolutely NO idea why it was made.
+This is when a good quality PR is important.
+
+#### Example PR description
+```
+Summary:
+Updated AWS HTTP configuration to allow for better handling of sudden increases in traffic.
+
+Why:
+Due to an incident that took place on 01/01/2026, we saw a specific pattern of traffic that our application failed to handle.
+
+Testing:
+Unit tests added
+Tested locally with basic cases
+Application was deployed and an extended load test was carried out to ensure traffic can be sustained.
+```
+
+Smaller PRs are better:
+- Easier to review
+- Easier to understand
+- Easier to fix
+
+**Guideline:**  
+If your PR is hard to explain in a few sentences, it’s probably too big.
+
+---
+
+### Code Review
+
+Code review is a vital stage in the engineering process, and is present in almost every software engineering team.
+Once a change has been proposed as a PR, other engineers in the team should look through it and make comments where necessary.
+Comments can be about anything from the fundamentals of the change itself, to (cue engineering-based arugments) code style and cleanliness.
+
+Code review allows:
+- Bugs to be caught early
+- Improves readaibility and design - other enigneers have to read and understand your code
+- Knowledge sharing across the team - everyone will have to support your code in production
+
+It is **not** about:
+- Personal criticism
+- Proving someone wrong
+- Rewriting everything to your taste - everyone has an opinion on how code should be arranged, but as long as it's understandable, this should not be the focus of the review
+
+Having others review your code can be scary as a junior engineer, but this is where a lot of learning and development takes place. It's a great opportunity to extract knowledge and suggestions from more senior engineers.
+The focus of any code review is to not only improve the quality of the proposed code, but also the quality of the engineer who produced it.
+
+---
+
+### How to review a Pull Request
+
+As a reviewer:
+- Read the **description first**
+- Focus on correctness, clarity, and maintainability
+- Ensure the change has been covered by tests adequately
+- Ask questions if something is unclear
+- Suggest improvements and explain *why*
+
+**Good review comments**
+- “What happens if this input is empty?”
+- “Could we simplify this loop?”
+- “Should this logic live in a helper function?”
+- "Has this area been covered with tests?"
+
+**Poor review comments**
+- “This is bad”
+- “Do it differently”
+- “I don’t like this”
+
+---
+
+### Receiving review feedback
+
+As the PR author:
+- Feedback is about the **code**, not you
+- Ask for clarification if needed
+- Make changes in new commits
+- Reply to comments, a back and forth over discussion points is healthy and encouraged
+
+---
+
+## Issues & project planning
+
+**Issues** are GitHub's proposal for project tracking and management.
+They act as a shared to-do list, design space, and history of decisions.
+
+If work isn’t tracked in an issue, it’s very easy to lose context — especially in a team.
+There is no requirement to use GitHub issues, alternatives include Trello, JIRA and more.
+Whatever system is chosen, ensure your branches and PRs are linked to the relevant issue.
+
+---
+
+### What issues are used for
+
+Issues can represent:
+- Bugs
+- New features
+- Improvements
+- Tasks or chores
+- Questions or discussions
+
+In real projects, issues are the starting point for almost all work.
+
+---
+
+## Conflicts & Resolution
+
+Merge conflicts are a normal part of working with Git — especially when multiple people are editing the same files.  
+They are not a sign that something has gone wrong.
+
+Learning to resolve conflicts confidently is a key Git skill.
+
+---
+
+### What is a merge conflict?
+
+A merge conflict happens when Git can’t automatically combine changes from two branches.
+
+This usually occurs when:
+- The same lines were edited in different branches
+- A file was changed in one branch and deleted in another
+- A branch is out of date with `main`
+
+Git will stop and ask **you** to decide what the correct result should be.
+
+---
+
+### When conflicts usually appear
+
+Conflicts most often appear:
+- When merging `main` into your branch
+- When your Pull Request is being merged
+- After long-running branches fall behind `main`
+
+The longer a branch lives, the more likely conflicts become.
+
+---
+
+### Resolving a merge conflict (step by step)
+
+1. **Update your local `main`**
+   ```bash
+   git checkout main
+   git pull
+    ```
+
+2. **Update your branch**
+   ```bash
+   git checkout feat/your-branch-name
+   ```
+
+3. **Merge `main` into your branch**
+   ```bash
+   git merge origin/main
+   ```
+   
+4. **Open conflicting files** 
+
+    Git will list out conflicting files, you can also see them with `git status`.
+    
+    Conflicts will be displayed within each file in the following format:
+    ```bash
+    <<<<<<< HEAD
+    your changes
+    =======
+    changes from main
+    >>>>>>> main
+    ```
+5. **Edit the files to resolve conflicts**
+
+   Update each file with *exactly* how you wish the changes to be combined:
+   - Keep one side
+   - Combine both
+   - Rewrite entirely if needed
+
+6. **Ensure all conflict markers have been removed**
+
+   Make sure all <<<<<<<, =======, and >>>>>>> lines are gone. These are designed to cause compile issues if left in place.
+
+7. **Commit and push the changes**
+   ```bash
+   git add <file>
+   git commit -m "Resolve merge conflict"
+   git push
+   ```
+   
+Once completed, your branch will be up to date with `main`, and your PR (if one exists) should no longer show conflicting files.
+Make sure to check your changes to ensure your changes are as you expect them to be following the merge.
+
+---
+
+## Automation & Continuous Integration (GitHub Actions)
+
+GitHub Actions is a powerful automation tool built into GitHub. In brief, it allows you to define workflows of actions to take place following certain interactions with GitHub.
+These interactions could be:
+- A new PR is opened
+- A PR is merged
+- A new commit is pushed to a branch
+
+On any of these events, we may want to run our test suite, run a linter, or deploy our application. GitHub Actions allows us to define these workflows and have them run automatically.
+
+These checks can be added to our PR flow, and if any were to fail we could block the PR from being merged. This type of automation is vital for a large software team working at scale. Some engineers may have many changes on-going at once, and cycle between them while automated checks are run in the background.
+
+This topic is very deep, so I won't go into detail here. More information can be found in the [GitHub Actions documentation](https://github.com/features/actions).
