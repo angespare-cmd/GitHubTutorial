@@ -15,15 +15,14 @@ By the end of this repo you should be able to:
 
 # Table of contents
 1. [Setup](#setup)
-2. [How this Course Works](#how-this-course-works)
-3. [Git Fundamentals](#git-fundamentals)
-4. [Branching & Workflow](#branching--workflow)
-5. [Pull Requests & Code Review](#pull-requests--code-review)
-6. [Issues & Project Planning](#issues--project-planning)
-7. [Conflicts & Resolution](#conflicts--resolution)
-8. [Automation - GitHub Actions](#automation---github-actions)
-9. [Git Cheat Sheet](#git-cheat-sheet)
-10. [FAQ / Troubleshooting](#faq--troubleshooting)
+2. [Git Fundamentals](#git-fundamentals)
+3. [Branching & Workflow](#branching--workflow)
+4. [Pull Requests & Code Review](#pull-requests--code-review)
+5. [Issues & Project Planning](#issues--project-planning)
+6. [Conflicts & Resolution](#conflicts--resolution)
+7. [Automation - GitHub Actions](#automation---github-actions)
+8. [Git Cheat Sheet](#git-cheat-sheet)
+9. [FAQ / Troubleshooting](#faq--troubleshooting)
 
 ---
 
@@ -41,9 +40,7 @@ git config --global user.email "you@example.com"
 git config --global init.defaultBranch main
 ```
 
----
-
-## How this Course Works
+Following this configuration, you will be asked to authenticate with GitHub using your personal account. 
 
 ---
 
@@ -57,23 +54,11 @@ Git is a **version control system**. It tracks changes to files over time so you
 
 GitHub is **not** Git — GitHub hosts Git repositories and adds collaboration features like pull requests, issues, and automation.
 
----
-
-## The Git Model
-
-Think of Git as having four main parts:
-
-- **Working directory**  
-  The files on your computer right now.
-
-- **Staging area (index)**  
-  The list of changes you *intend* to include in your next commit.
-
-- **Commit**  
-  A snapshot of the staged changes, with a message explaining *why*.
-
-- **Remote repository**  
-  A copy of the project stored on GitHub.
+In practice, GitHub allows teams to:
+- Work on the same codebase without overwriting each other.
+- Review and discuss changes before they are merged.
+- Track bugs, features, and decisions.
+- Automatically test code when changes are made.
 
 ---
 
@@ -421,12 +406,15 @@ This topic is very deep, so I won't go into detail here. More information can be
 
 ## Git Cheat Sheet
 
+### Useful Git Commands
+
 ```bash
 git clone <repo-url>                  # Clone a remote repository
 git status                            # Show current state (most important command)
 git log                               # Show commit history
 git log --oneline                     # Compact commit history
 git branch                            # List local branches
+git branch -d branch-name             # Delete local branch
 git add <file>                        # Stage a file
 git add .                             # Stage all changes
 git commit -m "message"               # Commit staged changes
@@ -441,8 +429,30 @@ git restore <file>                    # Undo unstaged changes
 git restore --staged <file>           # Unstage a file
 git cherry-pick <commit-hash>         # Apply a commit to your branch (can be any commit in the history of any branch)
 git reset --soft HEAD~1               # Undo last commit (keep changes) (useful command for when you forget something!)
-git branch -d branch-name             # Delete local branch
-git push origin --delete branch-name  # Delete remote branch
+git stash                             # Temporarily store changes
+git stash pop                         # Restore changes from stash
+git tag                               # List tags
+git tag v1.0.0                        # Create a tag
+git push --tags                       # Push tags to remote
+```
+### The .gitignore File
+A .gitignore file tells Git which files should **never** be committed. This is useful for files that are generated locally during the development flow, and aren't required for the application to run. The .gitignore file is located in the root of the repository, and can contain specfic file names, patterns or even directories.
+
+An example file:
+```bash
+# Build output
+dist/
+build/
+
+# Logs
+*.log
+
+# OS files
+.DS_Store
+
+# Editor files
+.idea/
+.vscode/
 ```
 
 ---
