@@ -372,10 +372,12 @@ The longer a branch lives, the more likely conflicts become.
 7. **Commit and push the changes**
    ```bash
    git add <file>
-   git commit -m "Resolve merge conflict" OR git commit (and use vim)
+   git commit -m "Resolve merge conflict" OR git commit (and use text editor)
    git push
    ```
    
+**NOTE:** if you use `git commit` without specifying a message, Git will open your default text editor to let you write a commit message.
+
 Once completed, your branch will be up to date with `main`, and your PR (if one exists) should no longer show conflicting files.
 Make sure to check your changes to ensure your changes are as you expect them to be following the merge.
 
