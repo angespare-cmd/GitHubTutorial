@@ -71,6 +71,16 @@ In this tutorial, the `main` branch represents **stable, working code**. In prac
 
 ---
 
+### Cloning a Repository
+
+To work on an existing repository, it will need to be cloned. This can be done with the command below. If this is the first you're pulling down a repository, you will likely be asked to authenticate with your GitHub username and password.
+
+```bash
+git clone <repository-url>
+```
+
+---
+
 ### A Simple Workflow
 
 The workflow used in this repository mirrors how an example engineering team works:
